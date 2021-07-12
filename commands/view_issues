@@ -1,0 +1,20 @@
+api graphql -f query='{
+  search(query: "is:issue assignee:@me is:open", type: ISSUE, first: 10) {
+    nodes {
+      ... on Issue {
+        author {
+          login
+        }
+        createdAt
+        lastEditedAt
+        repository {
+          name
+        }
+        url
+        bodyText
+        number
+        title
+      }
+    }
+  }
+}' --jq '[ .data.search.nodes[] | { author: .author.login, repository: .repository.name, url: .url, title: .title, number: .number, body: .bodyText, createdAt: .createdAt, lastEditedAt: .lastEditedAt} ]'

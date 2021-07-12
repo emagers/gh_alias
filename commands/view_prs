@@ -1,0 +1,20 @@
+api graphql -f query='{
+  search(query: "is:open is:pr review-requested:@me ", type: ISSUE, first: 100) {
+    edges {
+      node {
+        ... on PullRequest {
+          title
+          url
+          repository {
+            name
+          },
+          author {
+            login
+          }
+          createdAt
+          updatedAt
+        }
+      }
+    }
+  }
+}' --jq '[ .data.search.edges[] | {repository: .node.repository.name, title: .node.title, url: .node.url, author: .node.author.login, createdAt: .node.createdAt, updatedAt: .node.updatedAt} ]'
